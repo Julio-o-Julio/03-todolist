@@ -1,0 +1,211 @@
+#root {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.container {
+  background-color: #dae0f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.todos {
+  background-color: #333;
+  max-width: 508px;
+  height: 383px;
+  overflow-y: scroll;
+}
+
+.todo {
+  margin-top: 1.5rem;
+  margin-bottom: -1rem;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 8% 1fr 20% 8% 8% 8%;
+}
+
+.todoName {
+  min-width: 200px;
+  max-width: 200px;
+  text-align: start;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.todoDescription {
+  font-size: 0.8rem;
+  text-align: start;
+  opacity: 0.6;
+}
+
+.checkbox {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+
+  border: 2px solid #64697b;
+  box-shadow: none;
+  margin: 10px;
+}
+
+.buttonsTodo {
+  width: 2rem;
+}
+
+.active {
+  background-color: #00ec00;
+}
+
+.header {
+  background-color: #43088f;
+  width: 508px;
+  height: 60px;
+  box-shadow: 0px 0px 21px -7px rgba(0, 0, 0, 0.3);
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 0.8rem;
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.newTaskButton {
+  background-color: #43088f;
+  min-width: 160px;
+  height: 50px;
+  border-radius: 1rem;
+  margin-top: 1rem;
+}
+
+.input {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 10px;
+  text-align: center;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  height: 50px;
+  width: 300px;
+  box-shadow: 0px 0px 21px -7px rgba(0, 0, 0, 0.3);
+}
+.input:focus,
+.input:hover {
+  outline: none;
+  border-color: #646cff;
+}
+
+.modalContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: 1rem calc(4rem + 15px) 1rem 4rem;
+  display: flex;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+@media (max-width: 30rem) {
+  .modalContainer {
+    padding: 1rem calc(2rem + 15px) 1rem 2rem;
+  }
+}
+
+.modalContent {
+  padding: 1rem 2rem 2rem;
+  margin: 0 auto auto;
+  border: 2px solid #64697b;
+  border-radius: 1rem;
+  background: #333;
+  opacity: 0;
+  transform: scale(0.8);
+  animation: modalUp 0.3s forwards;
+}
+
+.tags {
+  margin-top: 1rem;
+  height: 300px;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.tag {
+  padding-right: 1.5rem;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 18% 1fr 12% 12%;
+}
+
+.inputColor {
+  height: 80%;
+  padding: 3px;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background-color: #555;
+  transition: all 0.2s ease-in;
+}
+
+.inputColor:hover {
+  border-color: #646cff;
+}
+
+.tagTextBox {
+  cursor: pointer;
+  margin-right: 0.5rem;
+  padding: 0 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background-color: #555;
+  transition: all 0.2s ease-in;
+}
+
+.tagTextBox:hover {
+  border-color: #646cff;
+}
+
+.spanTags {
+  height: 70%;
+  margin: 0 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  border-radius: 0.2rem;
+  background-color: #333;
+  overflow: hidden;
+}
+
+.spanTags > div {
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  min-width: 0;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.spanTags > div:hover {
+  opacity: 0.5;
+}
+
+@keyframes modalUp {
+  to {
+    opacity: initial;
+    transform: initial;
+  }
+}

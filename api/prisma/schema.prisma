@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Todo {
+  id          Int       @id @default(autoincrement())
+  status      Boolean   @default(false)
+  name        String
+  description String    @default("")
+  tagTodo     TagTodo[]
+}
+
+model Tag {
+  id      Int       @id @default(autoincrement())
+  name    String
+  color   String    @default("#989898")
+  tagTodo TagTodo[]
+}
+
+model TagTodo {
+  id     Int  @id @default(autoincrement())
+  todo   Todo @relation(fields: [todoId], references: [id])
+  todoId Int
+  tag    Tag  @relation(fields: [tagId], references: [id])
+  tagId  Int
+}
+
+model Log {
+  id         Int      @id @default(autoincrement())
+  table_name String
+  action     String
+  record_id  Int
+  timestamp  DateTime @default(now())
+}

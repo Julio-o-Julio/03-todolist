@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  backend-tests:
+    name: Testes API (Node.js)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Instalar dependências da API
+        working-directory: ./api
+        run: npm install
+
+      - name: Criar arquivo .env da API
+        working-directory: ./api
+        run: |
+          echo "DATABASE_URL=\"file:./dev.db\"" > .env
+      
+      - name: Rodar migrations
+        working-directory: ./api
+        run: npx prisma migrate deploy
+
+      - name: Atualizar ambiente prisma
+        working-directory: ./api
+        run: npx prisma generate
+
+      - name: Rodar server do Backend em background
+        working-directory: ./api
+        run: |
+          nohup npm run dev > backend.log 2>&1 &
+
+      - name: Aguardar servidor Backend iniciar (até 10s)
+        run: |
+          for i in {1..10}; do
+            if curl --silent --head http://localhost:8080; then
+              echo "✅ Backend no ar"
+              exit 0
+            fi
+            echo "⏳ Aguardando backend subir..."
+            sleep 1
+          done
+          echo "❌ Backend não respondeu com HTTP 200"
+          exit 1
+
+      - name: Rodar testes da API
+        working-directory: ./api
+        run: npm run test:e2e
+
+  frontend-tests:
+    name: Testes Frontend (React)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Instalar dependências do Frontend
+        working-directory: ./front
+        run: npm install
+
+      - name: Rodar server do Frontend em background
+        working-directory: ./front
+        run: |
+          nohup npm run dev > front.log 2>&1 &
+
+      - name: Aguardar servidor iniciar (até 10s)
+        run: |
+          for i in {1..10}; do
+            if curl --silent --head http://localhost:5173; then
+              echo "✅ Frontend no ar"
+              exit 0
+            fi
+            echo "⏳ Aguardando frontend subir..."
+            sleep 1
+          done
+          echo "❌ Frontend não respondeu com HTTP 200"
+          exit 1

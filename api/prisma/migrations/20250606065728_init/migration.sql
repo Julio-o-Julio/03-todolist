@@ -1,0 +1,32 @@
+-- CreateTable
+CREATE TABLE "Todo" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "status" BOOLEAN NOT NULL DEFAULT false,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL DEFAULT ''
+);
+
+-- CreateTable
+CREATE TABLE "Tag" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "color" TEXT NOT NULL DEFAULT '#989898'
+);
+
+-- CreateTable
+CREATE TABLE "TagTodo" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "todoId" INTEGER NOT NULL,
+    "tagId" INTEGER NOT NULL,
+    CONSTRAINT "TagTodo_todoId_fkey" FOREIGN KEY ("todoId") REFERENCES "Todo" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "TagTodo_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Log" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "table_name" TEXT NOT NULL,
+    "action" TEXT NOT NULL,
+    "record_id" INTEGER NOT NULL,
+    "timestamp" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
