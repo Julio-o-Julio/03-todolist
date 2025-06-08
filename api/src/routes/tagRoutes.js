@@ -1,9 +1,28 @@
+// Importa o framework Express para criação de rotas
 const express = require('express');
+
+// Importa a instância configurada do Prisma para integração com o banco de dados
 const prisma = require('../scripts/prisma/prismaConfig');
+
+// Importa função de tratamento de erros padronizada
 const handleError = require('../utils/exceptions');
 
+// Cria um roteador específico para os endpoints relacionados a tags
 const tagRoutes = express.Router();
 
+/**
+ * @route   POST /tags
+ * @desc    Cria uma nova tag e, opcionalmente, associa-a a uma tarefa existente.
+ * @access  Público
+ *
+ * @body    {string} name - Nome da tag
+ * @body    {string} color - Cor representativa da tag
+ * @body    {number} [todoId] - ID opcional de uma tarefa à qual a tag será associada
+ *
+ * @returns {Object} 201 - Tag criada (e associação com tarefa, se aplicável)
+ * @returns {Object} 404 - Tarefa não encontrada
+ * @returns {Object} 500 - Erro interno do servidor
+ */
 tagRoutes.post('/tags', async (request, response) => {
   try {
     const { name, color, todoId } = request.body;
@@ -43,6 +62,16 @@ tagRoutes.post('/tags', async (request, response) => {
   }
 });
 
+/**
+ * @route   GET /tags
+ * @desc    Retorna todas as tags existentes ou apenas as associadas a uma tarefa específica.
+ * @access  Público
+ *
+ * @query   {number} [todoId] - ID opcional da tarefa para filtrar as tags relacionadas
+ *
+ * @returns {Array<Object>} 200 - Lista de tags
+ * @returns {Object} 500 - Erro interno do servidor
+ */
 tagRoutes.get('/tags', async (request, response) => {
   try {
     const { todoId } = request.query;
@@ -60,6 +89,17 @@ tagRoutes.get('/tags', async (request, response) => {
   }
 });
 
+/**
+ * @route   GET /tags/:todoId
+ * @desc    Retorna todas as tags associadas a uma tarefa específica.
+ * @access  Público
+ *
+ * @param   {number} todoId - ID da tarefa
+ *
+ * @returns {Array<Object>} 200 - Lista de tags relacionadas à tarefa
+ * @returns {Object} 404 - Tarefa não encontrada
+ * @returns {Object} 500 - Erro interno do servidor
+ */
 tagRoutes.get('/tags/:todoId', async (request, response) => {
   try {
     const { todoId } = request.params;
@@ -81,6 +121,20 @@ tagRoutes.get('/tags/:todoId', async (request, response) => {
   }
 });
 
+/**
+ * @route   PUT /tags
+ * @desc    Atualiza informações de uma tag e pode associá-la a uma tarefa, se necessário.
+ * @access  Público
+ *
+ * @body    {number} id - ID da tag a ser atualizada
+ * @body    {string} name - Novo nome da tag
+ * @body    {string} [color] - Nova cor da tag
+ * @body    {number} [todoId] - ID opcional de tarefa para associar à tag
+ *
+ * @returns {Object} 200 - Tag atualizada (e nova associação, se houver)
+ * @returns {Object} 404 - Tag ou tarefa não encontrada
+ * @returns {Object} 500 - Erro interno do servidor
+ */
 tagRoutes.put('/tags', async (request, response) => {
   try {
     let newTagTodo = null;
@@ -129,6 +183,17 @@ tagRoutes.put('/tags', async (request, response) => {
   }
 });
 
+/**
+ * @route   DELETE /tags/:id
+ * @desc    Remove uma tag do sistema e suas associações com tarefas.
+ * @access  Público
+ *
+ * @param   {number} id - ID da tag a ser removida
+ *
+ * @returns {Object} 200 - Confirmação da remoção
+ * @returns {Object} 404 - Tag não encontrada
+ * @returns {Object} 500 - Erro interno do servidor
+ */
 tagRoutes.delete('/tags/:id', async (request, response) => {
   try {
     const { id } = request.params;
@@ -157,6 +222,19 @@ tagRoutes.delete('/tags/:id', async (request, response) => {
   }
 });
 
+/**
+ * @route   POST /tag-todos
+ * @desc    Cria uma associação entre uma tag e uma tarefa (relacionamento tagTodo).
+ * @access  Público
+ *
+ * @body    {number} tagId - ID da tag
+ * @body    {number} todoId - ID da tarefa
+ *
+ * @returns {Object} 201 - Associação criada com sucesso
+ * @returns {Object} 404 - Tag ou tarefa não encontrada
+ * @returns {Object} 409 - Associação já existe
+ * @returns {Object} 500 - Erro interno do servidor
+ */
 tagRoutes.post('/tag-todos', async (request, response) => {
   try {
     const { tagId, todoId } = request.body;
@@ -191,6 +269,18 @@ tagRoutes.post('/tag-todos', async (request, response) => {
   }
 });
 
+/**
+ * @route   DELETE /tag-todos/:tagId/:todoId
+ * @desc    Remove a associação entre uma tag e uma tarefa específica.
+ * @access  Público
+ *
+ * @param   {number} tagId - ID da tag
+ * @param   {number} todoId - ID da tarefa
+ *
+ * @returns {Object} 200 - Associação removida com sucesso
+ * @returns {Object} 404 - Associação, tag ou tarefa não encontrada
+ * @returns {Object} 500 - Erro interno do servidor
+ */
 tagRoutes.delete('/tag-todos/:tagId/:todoId', async (request, response) => {
   try {
     const { tagId, todoId } = request.params;
