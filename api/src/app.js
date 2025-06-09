@@ -4,9 +4,10 @@ const express = require('express');
 // Importa o middleware CORS, que permite requisições de diferentes origens (Cross-Origin Resource Sharing)
 const cors = require('cors');
 
-// Importa os arquivos de rotas específicas para "todos" e "tags"
+// Importa os arquivos de rotas específicas para "todos", "tags" e "logs"
 const todoRoutes = require('./routes/todoRoutes');
 const tagRoutes = require('./routes/tagRoutes');
+const logRoutes = require('./routes/logRoutes');
 
 // Cria uma instância da aplicação Express
 const app = express();
@@ -22,6 +23,9 @@ app.use(todoRoutes);
 
 // Registra as rotas da aplicação relacionadas a tags
 app.use(tagRoutes);
+
+// Registra as rotas da aplicação relacionadas a logs
+app.use(logRoutes);
 
 // Rota raiz apenas para verificar se o servidor está no ar (retorna 'up')
 app.get('/', (request, response) => {
